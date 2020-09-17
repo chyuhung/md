@@ -4,33 +4,19 @@
 
 ![image-20200422171302658](windows2016电话激活.assets/image-20200422171302658.png)
 
-
-
 ![image-20200427165935610](windows2016电话激活.assets/image-20200427165935610.png)
-
-
 
 2、输入命令`slui 4`调出电话激活界面
 
-![image-20200427165231132](windows2016电话激活.assets/image-20200427165231132.png)
-
-
+![image-20200918000930952](windows2016电话激活.assets/image-20200918000930952.png)
 
 3、在界面中选择“中国”并下一步
 
-![image-20200427165739798](windows2016电话激活.assets/image-20200427165739798.png)
-
-
+![image-20200918000524865](windows2016电话激活.assets/image-20200918000524865.png)
 
 4、按正常程序拨打电话进行激活即可
 
-![img](windows2016电话激活.assets/8212c995d143ad4b1601cfba8c025aafa40f06ba.jpg)
-
-
-
-附：微软电话激活拨号步骤
-
-
+![image-20200918000814575](windows2016电话激活.assets/image-20200918000814575.png)
 
 # WindowsServer电话激活拨号步骤
 
