@@ -1,0 +1,43 @@
+site_name: 十二万光年
+site_author: '大熊'
+site_description: '梦想还是要有的'
+site_url: 'https://www.baidu.com'
+copyright: Copyright © 2020 chyuhung
+
+#文件目录
+
+
+#主题配色
+theme:
+  name: material
+  language: 'zh'
+
+# 本地调试端口
+dev_addr: 127.0.0.1:8000
+
+#其他扩展
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+      linenums: false
+  - toc:
+      permalink: true
+  - footnotes
+  - meta
+  - def_list
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_png
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist
+  - pymdownx.tilde

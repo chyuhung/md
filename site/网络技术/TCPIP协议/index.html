@@ -1,0 +1,724 @@
+
+
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="梦想还是要有的">
+      
+      
+        <link rel="canonical" href="https://www.baidu.com/%E7%BD%91%E7%BB%9C%E6%8A%80%E6%9C%AF/TCPIP%E5%8D%8F%E8%AE%AE/">
+      
+      
+        <meta name="author" content="大熊">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.12">
+    
+    
+      
+        <title>TCP/IP协议 - 十二万光年</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.4dd2dd8d.min.css">
+      
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tcpip" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="https://www.baidu.com" title="十二万光年" class="md-header-nav__button md-logo" aria-label="十二万光年">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            十二万光年
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              TCP/IP协议
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://www.baidu.com" title="十二万光年" class="md-nav__button md-logo" aria-label="十二万光年">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    十二万光年
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="首页" class="md-nav__link">
+      首页
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../about/" title="关于" class="md-nav__link">
+      关于
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      系统相关
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="系统相关" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon"></span>
+        系统相关
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/windows2016%E7%94%B5%E8%AF%9D%E6%BF%80%E6%B4%BB/" title="WindowsServer电话激活操作步骤" class="md-nav__link">
+      WindowsServer电话激活操作步骤
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      网络技术
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="网络技术" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        <span class="md-nav__icon md-icon"></span>
+        网络技术
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        TCP/IP协议
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" title="TCP/IP协议" class="md-nav__link md-nav__link--active">
+      TCP/IP协议
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    产生背景
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    协议组成
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    通信过程及相关协议
+  </a>
+  
+    <nav class="md-nav" aria-label="通信过程及相关协议">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    链路层
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    网络层
+  </a>
+  
+    <nav class="md-nav" aria-label="网络层">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ip" class="md-nav__link">
+    IP协议
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arp" class="md-nav__link">
+    ARP协议
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#icmp" class="md-nav__link">
+    ICMP
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    路由协议
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    传输层
+  </a>
+  
+    <nav class="md-nav" aria-label="传输层">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#udp" class="md-nav__link">
+    UDP协议
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tcp" class="md-nav__link">
+    TCP协议
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    应用层
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Windows%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5VPN/" title="Windows实现自动连接VPN" class="md-nav__link">
+      Windows实现自动连接VPN
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../%E4%B8%BAVmware-Workstation%E4%B8%AD%E7%9A%84Ubuntu%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%85%8D%E7%BD%AEV2ray%E4%BB%A3%E7%90%86/" title="为Vmware-Workstation中的Ubuntu虚拟机配置V2ray代理" class="md-nav__link">
+      为Vmware-Workstation中的Ubuntu虚拟机配置V2ray代理
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      虚拟化技术
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="虚拟化技术" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        <span class="md-nav__icon md-icon"></span>
+        虚拟化技术
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../%E8%99%9A%E6%8B%9F%E5%8C%96%E6%8A%80%E6%9C%AF/%E4%BD%BF%E7%94%A8Hyper-V%E5%88%9B%E5%BB%BA%E8%99%9A%E6%8B%9F%E6%9C%BA/" title="使用Hyper-V创建虚拟机" class="md-nav__link">
+      使用Hyper-V创建虚拟机
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    产生背景
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    协议组成
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    通信过程及相关协议
+  </a>
+  
+    <nav class="md-nav" aria-label="通信过程及相关协议">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    链路层
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    网络层
+  </a>
+  
+    <nav class="md-nav" aria-label="网络层">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ip" class="md-nav__link">
+    IP协议
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arp" class="md-nav__link">
+    ARP协议
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#icmp" class="md-nav__link">
+    ICMP
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    路由协议
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    传输层
+  </a>
+  
+    <nav class="md-nav" aria-label="传输层">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#udp" class="md-nav__link">
+    UDP协议
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tcp" class="md-nav__link">
+    TCP协议
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    应用层
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  
+                
+                
+                <h1 id="tcpip">TCP/IP协议<a class="headerlink" href="#tcpip" title="Permanent link">&para;</a></h1>
+<h2 id="_1">产生背景<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Intetnet网络前身ARPANET（ARPA：美国高级研究计划署简称，ARPANET也称阿帕网）开始使用的是*网络控制协议*（Network Control Protocol，NCP），随着网络和用户的不断发展，NCP仅能用于同构环境中（所谓同构环境是网络上的所有计算机都运行相同的操作系统）的缺陷愈发凸显，设计者就认为“同构”这一限制不应被加到一个分布广泛的网络上，于是，用于“异构”网络环境中的*传输控制协议/网际协议协议*（Transmission Control Protocol/Internet Protocol，TCP/IP）应运而生。</p>
+<h2 id="_2">协议组成<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>TCP/IP协议在一定程度上参考了<a href="https://baike.baidu.com/item/OSI/5520">OSI</a>的体系结构。OSI模型共有七层，从下到上分别是物理层、数据链路层、网络层、运输层、会话层、表示层和应用层。但是这显然是有些复杂的，所以在TCP/IP协议中，它们被简化为了四个层次。</p>
+<p>（1）应用层、表示层、会话层三个层次提供的服务相差不是很大，所以在TCP/IP协议中，它们被合并为应用层一个层次。</p>
+<p>（2）由于运输层和网络层在网络协议中的地位十分重要，所以在TCP/IP协议中它们被作为独立的两个层次。</p>
+<p>（3）因为数据链路层和物理层的内容相差不多，所以在TCP/IP协议中它们被归并在网络接口层一个层次里。只有四层体系结构的TCP/IP协议，与有七层体系结构的OSI相比要简单了不少，也正是这样，TCP/IP协议在实际的应用中效率更高，成本更低。</p>
+<p><img alt="image-20200917110516427" src="../TCPIP%E5%8D%8F%E8%AE%AE.assets/image-20200917110516427.png" /></p>
+<h2 id="_3">通信过程及相关协议<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>在<a href="https://baike.baidu.com/item/网络通信/9636548">网络通信</a>的过程中，将发出数据的主机称为源主机，接收数据的主机称为目的主机。当源主机发出数据时，数据在源主机中从上层向下层传送。源主机中的应用进程先将数据交给应用层，应用层加上必要的控制信息就成了报文流，向下传给传输层。传输层将收到的数据单元加上本层的控制信息，形成报文段、数据报，再交给网际层。网际层加上本层的控制信息，形成IP数据报，传给网络接口层。网络接口层将网际层交下来的IP数据报组装成帧，并以比特流的形式传给网络硬件（即物理层），数据就离开源主机。</p>
+<h3 id="_4">链路层<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>以太网协议规定，接入网络的设备都必须安装网络适配器，即<a href="https://baike.baidu.com/item/网卡/155684">网卡</a>，数据包必须是从一块网卡传送到另一块网卡。而网卡地址就是数据包的发送地址和接收地址，有了MAC地址以后，<a href="https://baike.baidu.com/item/以太网/99684">以太网</a>采用广播形式，把数据包发给该子网内所有主机，子网内每台主机在接收到这个包以后，都会读取首部里的目标MAC地址，然后和自己的MAC地址进行对比，如果相同就做下一步处理，如果不同，就丢弃这个包。</p>
+<p><strong>所以链路层的主要工作就是对电信号进行分组并形成具有特定意义的数据帧，然后以广播的形式通过物理介质发送给接收方。</strong></p>
+<h3 id="_5">网络层<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h4 id="ip">IP协议<a class="headerlink" href="#ip" title="Permanent link">&para;</a></h4>
+<p>网络层引入了IP协议，制定了一套新地址，使得我们能够区分两台主机是否同属一个网络，这套地址就是网络地址，也就是所谓的IP地址。IP协议将这个32位的地址分为两部分，前面部分代表网络地址，后面部分表示该主机在局域网中的地址。如果两个IP地址在同一个子网内，则网络地址一定相同。为了判断IP地址中的网络地址，IP协议还引入了子网掩码，IP地址和子网掩码通过按位与运算后就可以得到网络地址。</p>
+<h4 id="arp">ARP协议<a class="headerlink" href="#arp" title="Permanent link">&para;</a></h4>
+<p>即地址解析协议，是根据IP地址获取MAC地址的一个网络层协议。其工作原理如下：ARP首先会发起一个请求数据包，数据包的首部包含了目标主机的IP地址，然后这个数据包会在链路层进行再次包装，生成以太网数据包，最终由以太网广播给子网内的所有主机，每一台主机都会接收到这个数据包，并取出标头里的IP地址，然后和自己的IP地址进行比较，如果相同就返回自己的MAC地址，如果不同就丢弃该数据包。ARP接收返回消息，以此确定目标机的MAC地址；与此同时，ARP还会将返回的MAC地址与对应的IP地址存入本机ARP缓存中并保留一定时间，下次请求时直接查询ARP缓存以节约资源。</p>
+<h4 id="icmp">ICMP<a class="headerlink" href="#icmp" title="Permanent link">&para;</a></h4>
+<p>ICMP（Internet Control Message Protocol）Internet控制报文协议。它是TCP/IP协议簇的一个子协议，用于在IP主机、路由器之间传递控制消息。控制消息是指网络通不通、主机是否可达、路由是否可用等网络本身的消息。这些控制消息虽然并不传输用户数据，但是对于用户数据的传递起着重要的作用。ping 和 tracert是两个常用网络管理命令，ping 用来测试网络可达性，tracert 用来显示到达目的主机的路径。ping和 tracert 都利用 ICMP 协议来实现网络功能，它们是把网络协议应用到日常网络管理的典型实例。</p>
+<h4 id="_6">路由协议<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h4>
+<p>首先通过IP协议来判断两台主机是否在同一个<a href="https://baike.baidu.com/item/子网/1186929">子网</a>中，如果在同一个子网，就通过ARP协议查询对应的MAC地址，然后以广播的形式向该子网内的主机发送数据包；如果不在同一个子网，以太网会将该数据包转发给本子网的网关进行路由。网关是互联网上子网与子网之间的桥梁，所以网关会进行多次转发，最终将该数据包转发到目标IP所在的子网中，然后再通过ARP获取目标机MAC，最终也是通过广播形式将数据包发送给接收方。而完成这个路由协议的物理设备就是路由器，路由器扮演着交通枢纽的角色，它会根据信道情况，选择并设定路由，以最佳路径来转发数据包。</p>
+<p><strong>所以，网络层的主要工作是定义网络地址、区分网段、子网内MAC寻址、对于不同子网的数据包进行路由。</strong></p>
+<h3 id="_7">传输层<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h4 id="udp">UDP协议<a class="headerlink" href="#udp" title="Permanent link">&para;</a></h4>
+<p>UDP协议定义了端口，同一个主机上的每个应用程序都需要指定唯一的端口号，并且规定网络中传输的数据包必须加上端口信息，当数据包到达主机以后，就可以根据端口号找到对应的应用程序了。UDP协议比较简单，实现容易，但它没有确认机制，数据包一旦发出，无法知道对方是否收到，因此可靠性较差，为了解决这个问题，提高网络可靠性，TCP协议就诞生了。</p>
+<h4 id="tcp">TCP协议<a class="headerlink" href="#tcp" title="Permanent link">&para;</a></h4>
+<p>TCP即传输控制协议，是一种面向连接的、可靠的、基于字节流的通信协议。简单来说TCP就是有确认机制的UDP协议，每发出一个数据包都要求确认，如果有一个数据包丢失，就收不到确认，发送方就必须重发这个数据包。为了保证传输的可靠性，TCP协议在UDP基础之上建立了三次对话的确认机制，即在正式收发数据前，必须和对方建立可靠的连接。TCP数据包和UDP一样，都是由首部和数据两部分组成，唯一不同的是，TCP数据包没有长度限制，理论上可以无限长，但是为了保证网络的效率，通常TCP数据包的长度不会超过IP数据包的长度，以确保单个TCP数据包不必再分割。</p>
+<p><strong>传输层的主要工作是定义<a href="https://baike.baidu.com/item/端口/103505">端口</a>，标识应用程序身份，实现端口到端口的通信，TCP协议可以保证数据传输的可靠性。</strong></p>
+<h3 id="_8">应用层<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>理论上讲，有了以上三层协议的支持，数据已经可以从一个主机上的应用程序传输到另一台主机的应用程序了，但此时传过来的数据是字节流，不能很好的被程序识别，操作性差，因此，应用层定义了各种各样的协议来规范数据格式，常见的有<a href="https://baike.baidu.com/item/http/243074">http</a>,<a href="https://baike.baidu.com/item/FTP%E5%8D%8F%E8%AE%AE/7651119?fr=aladdin">ftp</a>,<a href="https://baike.baidu.com/item/smtp/175887">smtp</a>等，在请求<a href="https://baike.baidu.com/item/Header/688992">Header</a>中，分别定义了请求数据格式Accept和响应数据格式Content-Type，有了这个规范以后，当对方接收到请求以后就知道该用什么格式来解析，然后对请求进行处理，最后按照请求方要求的格式将数据返回，请求端接收到响应后，就按照规定的格式进行解读。</p>
+<p><strong>所以应用层的主要工作就是定义数据格式并按照对应的格式解读数据。</strong></p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../../%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3/windows2016%E7%94%B5%E8%AF%9D%E6%BF%80%E6%B4%BB/" title="WindowsServer电话激活操作步骤" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  上一页
+                </span>
+                WindowsServer电话激活操作步骤
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../Windows%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5VPN/" title="Windows实现自动连接VPN" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  下一页
+                </span>
+                Windows实现自动连接VPN
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Copyright © 2020 chyuhung
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.3636a4ec.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e9fe3281.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "\u590d\u5236", "clipboard.copied": "\u5df2\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\uff0c\\u3002]+", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.5eca75d3.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>
