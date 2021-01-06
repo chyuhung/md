@@ -47,5 +47,3 @@
 2、push代码时可能出现类似以下的错误，可以添加参数`-f`强制push
 
 ![image-20200918155117390](README.assets/image-20200918155117390.png)
-
-![image-20200918155752887](同步mkdocs到多个git远程仓库.assets/image-20200918155752887.png)
