@@ -10,6 +10,18 @@
 
 ## 关键配置
 
+### git配置
+
+1、生成公钥，使用命令`ssh-keygen.exe -t rsa -C "username"`一路回车，在最后的路径中找到id_rsa.pub文件，复制内容添加到github或gitee相关配置中
+
+![image-20210106151952013](同步mkdocs到多个git远程仓库.assets/image-20210106151952013.png)
+
+![image-20210106152319690](同步mkdocs到多个git远程仓库.assets/image-20210106152319690.png)
+
+2、配置全局的账号信息
+
+![image-20210106152534531](同步mkdocs到多个git远程仓库.assets/image-20210106152534531.png)
+
 ### pages服务
 
 1、gitee需要开启pages服务，且每次push代码以后需要进行手动重新部署
