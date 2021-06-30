@@ -3190,7 +3190,7 @@ from sqlalchemy import or_filter(or_(Note.body == 'foo', Note.body == 'bar'))
 
 ### 在视图函数里操作数据库
 
-在视图函数里操作数据库的方式和在Python Shell中的练习大致相同，只不过需要一些额外的工作。比如把查询结果作为参数传入模板渲染出来，或是获取表单的字段值作为提交到数据库的数据。在这一节，将把上一节学习的所有数据库操作知识运用到一个简单的笔记程序中。这个程序可以让你创建、编辑和删除笔记，并在主页列出所有保存后的笔记。
+在视图函数里操作数据库的方式和在Python Shell中的练习大致相同，只不过需要一些额外的工作。比如把查询结果作为参数传入模板渲染出来，或是获取表单的字段值作为提交到数据库的数据。在这一节，将把上一节学习的所有数据库操作知识运用到一个简单的笔记程序中。这个程序可以创建、编辑和删除笔记，并在主页列出所有保存后的笔记。
 
 #### create
 
@@ -3223,7 +3223,7 @@ def new_note():
     return render_template('new_note.html',form=form)
 ```
 
-先来看看form.validate_on_submit()返回True时的处理代码。当表单被提交且通过验证时，我们获取表单body字段的数据，然后创建新的Note实例，将表单中body字段的值作为body参数传入，最后添加到数据库会话中并提交会话。这个过程接收用户通过表单提交的数据并保存到数据库中，最后我们使用flash()函数发送提示消息并重定向到index视图。
+先来看看form.validate_on_submit()返回True时的处理代码。当表单被提交且通过验证时，获取表单body字段的数据，然后创建新的Note实例，将表单中body字段的值作为body参数传入，最后添加到数据库会话中并提交会话。这个过程接收用户通过表单提交的数据并保存到数据库中，最后使用flash()函数发送提示消息并重定向到index视图。
 表单在new_note.html模板中渲染:
 
 ```
@@ -3373,7 +3373,7 @@ form.body.data = note.body
 </ul>
 ```
 
-生成edit_note视图的URL时，我们传入当前note对象的id ( note.id)作为URL变量note_id的值。
+生成edit_note视图的URL时，传入当前note对象的id ( note.id)作为URL变量note_id的值。
 
 #### delete
 
@@ -3461,7 +3461,7 @@ def delete_note(note_id):
 
 ### 定义关系
 
-在关系型数据库中，可以通过关系让不同表之间的字段建立联系。一般来说，定义关系需要两步，分别是创建外键和定义关系属性。在更复杂的多对多关系中，我们还需要定义关联表来管理关系。这一节学习如何使用SQLAlchemy在模型之间建立几种基础的关系模式。
+在关系型数据库中，可以通过关系让不同表之间的字段建立联系。一般来说，定义关系需要两步，分别是创建外键和定义关系属性。在更复杂的多对多关系中，还需要定义关联表来管理关系。这一节学习如何使用SQLAlchemy在模型之间建立几种基础的关系模式。
 
 ### 配置python shell上下文
 
@@ -3535,13 +3535,13 @@ class Article(db.Model):
 
 外键字段的命名没有限制，因为要连接的目标字段是author表的id列，所以为了便于区分而将这个外键字段的名称命名为author_id。
 
-传入Foreign Key类的参数author.id，其中author指的是Author模型对应的表名称，而id指的是字段名，即“表名.字段名”。**模型类对应的表名由Flask-SQLlchemy生成，默认为类名称的小写形式，多个单词通过下划线分隔，你也可以显式地通过\_tablename\_属性自己指定，后面不再提示。**
+传入Foreign Key类的参数author.id，其中author指的是Author模型对应的表名称，而id指的是字段名，即“表名.字段名”。**模型类对应的表名由Flask-SQLlchemy生成，默认为类名称的小写形式，多个单词通过下划线分隔，也可以显式地通过\_tablename\_属性自己指定，后面不再提示。**
 
 相关参考文献：https://www.crifan.com/flask_sqlalchemy_database_sqlalchemy_exc_noreferencedtableerror_foreign_key_associated_with_column_events_user_openid_could_not_find_table/
 
 ### 定义关系属性
 
-定义关系的第二步是使用关系函数定义关系属性。关系属性在关系的出发侧定义，即一对多关系的“一”这一侧。一个作者拥有多篇文章，在Author模型中，我们定义了一个articles属性来表示对应的多篇文章:
+定义关系的第二步是使用关系函数定义关系属性。关系属性在关系的出发侧定义，即一对多关系的“一”这一侧。一个作者拥有多篇文章，在Author模型中，定义了一个articles属性来表示对应的多篇文章:
 
 ```
 class Author(db.Model):
@@ -3552,7 +3552,7 @@ class Author(db.Model):
 ```
 
 关系属性的名称没有限制，可以自由修改。它相当于一个快捷查询，不会作为字段写入数据库中。
-这个属性并没有使用Column类声明为列，而是使用了db.relationship()关系函数定义为关系属性，因为这个关系属性返回多个记录，我们称之为集合关系属性。relationship()函数的第一个参数为关系另一侧的模型名称，它会告诉SQLAlchemy将Author类与Article类建立关系。当这个关系属性被调用时，SQLAIchemy会找到关系另一侧(即article表)的外键字段（即author_id)，然后反向查询article表中所有author_id值为当前表主键值(即author.id)的记录，返回包含这些记录的列表，也就是返回某个作者对应的多篇文章记录。
+这个属性并没有使用Column类声明为列，而是使用了db.relationship()关系函数定义为关系属性，因为这个关系属性返回多个记录，称之为集合关系属性。relationship()函数的第一个参数为关系另一侧的模型名称，它会告诉SQLAlchemy将Author类与Article类建立关系。当这个关系属性被调用时，SQLAIchemy会找到关系另一侧(即article表)的外键字段（即author_id)，然后反向查询article表中所有author_id值为当前表主键值(即author.id)的记录，返回包含这些记录的列表，也就是返回某个作者对应的多篇文章记录。
 
 ```
 from flask import Flask
@@ -3685,5 +3685,688 @@ dynamic选项仅用于集合关系属性，不可用于多对一、一对一或�
 
 ### 建立双向关系
 
-在Author类中定义了集合关系属性articles，用来获取某个作者拥有的多篇文章记录。在某些情况下，也许希望能在Article类中定义一个类似的author关系属性，当被调用时返回对应的作者记录，这类返回单个值的关系属性被称为标量关系属性。而这种两侧都添加关系属性获取对方记录的关系我们称之为双向关系(bidirectional relationship)。
-双向关系并不是必须的，但在某些情况下会非常方便。双向关系的建立很简单，通过在关系的另一侧也创建一个relationship()函数，我们就可以在两个表之间建立双向关系。我们使用作家(Writer)和书（Book)的一对多关系来进行演示，建立双向关系后的Writer和Book类如：
+在Author类中定义了集合关系属性articles，用来获取某个作者拥有的多篇文章记录。在某些情况下，也许希望能在Article类中定义一个类似的author关系属性，当被调用时返回对应的作者记录，这类返回单个值的关系属性被称为标量关系属性。而这种两侧都添加关系属性获取对方记录的关系称之为双向关系(bidirectional relationship)。
+双向关系并不是必须的，但在某些情况下会非常方便。双向关系的建立很简单，通过在关系的另一侧也创建一个relationship()函数，就可以在两个表之间建立双向关系。使用作家(Writer)和书（Book)的一对多关系来进行演示，建立双向关系后的Writer和Book类如：
+
+```
+class Writer(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    name=db.Column(db.String(70),unique=True)
+    books=db.relationship("Book",back_populates="writer")
+    # optional
+    def __repr__(self):
+        return '<%r>' % self.name
+
+class Book(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    title=db.Column(db.String(50),index=True)
+    body=db.Column(db.Text)
+    writer_id=db.Column(db.Integer,db.ForeignKey("writer.id"))
+    writer=db.relationship("Writer",back_populates="books")
+    # optional
+    def __repr__(self):
+        return '<%r>' % self.title
+```
+
+在“多”这一侧的Book (书）类中，新创建了一个writer关系属性，这是一个标量关系属性，调用它会获取对应的Writer(作者）记录;而在Writer(作者）类中的books属性则用来获取对应的多个Book(书）记录。在关系函数中，使用back_populates参数来连接对方, back_populates参数的值需要设为关系另一侧的关系属性名。
+
+为了方便演示，先创建1个Writer和2个Book记录，并添加到数据库中:
+
+```
+# #使用app.shell_context_processor装饰器注册一个shell上下文处理函数
+@app.shell_context_processor
+def make_shell_context():
+    return dict(db=db,Author=Author,Article=Article,Writer=Writer,Book=Book)
+```
+
+```
+(helloflask) D:\helloflask\demos\newdatabase>flask initdb
+Initialized Database.
+
+(helloflask) D:\helloflask\demos\newdatabase>flask shell
+Python 3.8.5 (tags/v3.8.5:580fbb0, Jul 20 2020, 15:43:08) [MSC v.1926 32 bit (Intel)] on win32
+App: app [production]
+Instance: D:\helloflask\demos\newdatabase\instance
+>>> peter=Writer(name="chyuhung")
+>>> carrie=Book(title="carrie")
+>>> it=Book(title="it")
+>>> db.session.add(peter)
+>>> db.session.add(carrie)
+>>> db.session.add(it)
+>>> db.session.commit()
+```
+
+设置双向关系后，除了通过集合属性books来操作关系，也可以使用标量属性writer来进行关系操作。比如，将一个Writer对象赋值给某个Book对象的writer属性，就会和这个Book对象建立关系:
+
+```
+>>> carrie=Book.query.filter(Book.title=="carrie").first()
+>>> carrie.writer
+>>> carrie.writer=chyuhung
+>>> chyuhung.books
+[<'carrie'>]
+>>> carrie.writer
+<'chyuhung'>
+>>> it=Book.query.filter(Book.title=="it").first()
+>>> it.writer
+>>> it.writer=chyuhung
+>>> it.writer
+<'chyuhung'>
+>>> chyuhung.books
+[<'carrie'>, <'it'>]
+```
+
+相对的，将某个Book的writer属性设为None，就会解除与对应Writer对象的关系:
+
+```
+>>> carrie.writer=None
+>>> carrie.writer
+>>> chyuhung.books
+[<'it'>]
+>>> db.session.commit()
+```
+
+需要注意的是，只需要在关系的一侧操作关系。当为Book对象的writer属性赋值后，对应Writer对象的books属性的返回值也会自动包含这个Book对象。反之，当某个Writer对象被删除时，对应的Book对象的writer属性被调用时的返回值也会被置为空(即NULL，会返回None)。
+其他关系模式建立双向关系的方式完全相同，在下面介绍不同的关系模式时会简单说明。
+
+### 使用backref简化关系定义
+
+在介绍关系函数的参数时，曾提到过，使用关系函数中的backref参数可以简化双向关系的定义。以一对多关系为例，backref参数用来自动为关系另一侧添加关系属性，作为反向引用(back reference)，赋予的值会作为关系另一侧的关系属性名称。比如，在Author一侧的关系函数中将backref参数设为author,SQLAlchemy会自动为Article类添加一个author属性。为了避免和前面的示例命名冲突，使用歌手(Singer)和歌曲(Song)的一对多关系作为演示，分别创建Singer和Song类，如:
+
+```
+class Singer(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    name=db.Column(db.String(20))
+    songs=db.relationship("Song",backref="singer")
+
+    def __repr__(self):
+        return "<%r>" %self.name
+
+class Song(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    title=db.Column(db.String(50))
+    singer_id=db.Column(db.Integer,db.ForeignKey("singer.id"))
+
+    def __repr__(self):
+        return "<%r>" %self.title
+```
+
+在定义集合属性songs的关系函数中，将backref参数设为singer，这会同时在Song类中添加了一个singer标量属性。这时仅需要定义一个关系函数，虽然singer是一个“看不见的关系属性”，但在使用上和定义两个关系函数并使用back_populates参数的效果完全相同。
+需要注意的是，使用backref允许仅在关系一侧定义另一侧的关系属性，但是在某些情况下，希望可以对在关系另一侧的关系属性进行设置，这时就需要使用backref()函数。backref()函数接收第一个参数作为在关系另一侧添加的关系属性名，其他关键字参数会作为关系另一侧关系函数的参数传入。比如，要在关系另一侧“看不见的relationship()函数”中将uselist参数设为False，可以这样实现:
+
+```
+class Singer(db.Model):
+    ...
+    songs = relationship('Song', backref=backref('singer', uselist=False))
+```
+
+尽管使用backref非常方便，但通常来说“显式好过隐式”，所以应该尽量使用back_populates定义双向关系。为了便于理解，都将使用back populates来建立双向关系。
+
+### 多对一
+
+一对多关系反过来就是多对一关系，这两种关系模式分别从不同的视角出发。一个作者拥有多篇文章，反过来就是多篇文章属于同一个作者。为了便于区分，使用居民和城市来演示多对一关系:多个居民居住在同一个城市。多对一关系如：
+
+![image-20210423163123198](flask入门.assets/image-20210423163123198.png)
+
+在示例程序中，Citizen类表示居民，City类表示城市。建立多对一关系后，将在Citizen类中创建一个标量关系属性city，调用它可以获取单个City对象。
+**关系属性在关系模式的出发侧定义。**当出发点在“多”这一侧时，希望在Citizen类中添加一个关系属性city来获取对应的城市对象，因为这个关系属性返回单个值，称之为标量关系属性。在定义关系时，外键总是在“多”这一侧定义，所以在多对一关系中外键和关系属性都定义在“多”这一侧，即City类中，如：
+
+```
+class Citizen(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    name=db.Column(db.String(20))
+    city_id=db.Column(db.Integer,db.ForeignKey("city.id"))
+    city=db.relationship("City")
+    def __repr__(self):
+        return "<%r>"%self.name
+
+class City(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    name=db.Column(db.String(30))
+    def __repr__(self):
+        return "<%r>" %self.name
+```
+
+这时定义的city关系属性是一个标量属性（返回单一数据)。当Citizen.city被调用时,SQLAlchemy会根据外键字段city_id存储的值查找对应的City对象并返回，即居民记录对应的城市记录。
+当建立双向关系时，如果不使用backref，那么一对多和多对一关系模式在定义上完全相同，这时可以将一对多和多对一视为同一种关系模式。通常都会为一对多或多对一建立双向关系，这时将弱化这两种关系的区别，一律称为一对多关系。
+
+### 一对一
+
+使用国家和首都来演示一对一关系:每个国家只有一个首都;反过来说，一个城市也只能作为一个国家的首都。一对一关系示意如：
+
+![image-20210423172856870](flask入门.assets/image-20210423172856870.png)
+
+在示例中，Country类表示国家，Capital类表示首都。建立一对一关系后，将在Country类中创建一个标量关系属性capital，调用它会获取单个Capital对象;还将在Capital类中创建一个标量关系属性country，调用它会获取单个的Country对象。
+一对一关系实际上是通过建立双向关系的一对多关系的基础上转化而来。要确保关系两侧的关系属性都是标量属性，都只返回单个值，所以要在定义集合属性的关系函数中将uselist参数设为False，这时一对多关系将被转换为一对一关系。一下代码基于建立双向关系的一对多关系实现了一对一关系。
+
+```
+class Country(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), unique=True)
+    capital = db.relationship('Capital', back_populates='country', uselist=False)
+
+class Capital(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), unique=True)
+    country_id = db.Column(db.Integer, db.ForeignKey('country.id'))
+    country = db.relationship('Country', back_populates='capital', )
+```
+
+“多”这一侧本身就是标量关系属性，不用做任何改动。而“一”这一侧的集合关系属性，通过将uselist设为False后，将仅返回对应的单个记录，而且无法再使用列表语义操作:
+
+```
+>>> china=Country(name="China")
+>>> beijing=Capital(name="BeiJing")
+>>> db.session.add(china)
+>>> db.session.add(beijing)
+>>> db.session.commit()
+>>> china.capital=beijing
+>>> china.capital
+<Capital 1>
+>>> beijing.country
+<Country 1>
+>>> beijing.country.name
+'China'
+>>> china.capital.name
+'BeiJing'
+>>> china.capital.append(tokyo)
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: 'Capital' object has no attribute 'append'
+```
+
+### 多对多
+
+使用学生和老师来演示多对多关系：每个学生有多个老师，而每个老师有多个学生。
+多对多关系模式示:
+
+![image-20210611140957869](flask入门.assets/image-20210611140957869.png)
+
+Student类表示学生， Teacher 类表示老师。在这两个模型之间建立多对多关系后， 需要在Student类中添加一个集合关系属性teachers ，调用它可以获取某个学生的多个老师，而不同的学生可以和同一个老师建立关系。
+在一对多关系中，可以在“多”这一侧添加外键指向“一”这一侧，外键只能存储一个记录，但是在多对多关系中，每一个记录都可以与关系另一侧的多个记录建立关系，关系两侧的模型都需要存储一组外键。在SQLAlchemy 中， 要想表示多对多关系， 除了关系两侧的模型外，还需要创建一个关联表（ association table ） 。关联表不存储数据，只用来存储关系两侧模型的外键对应关系。
+
+```
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+import os
+import click
+
+app=Flask(__name__)
+
+# #Flask-SQLAlchemy建议设置SQLALCHEMY_TRACK_MODIFICATIONS配置变量，
+# #这个配置变量决定是否追踪对象的修改，这用于Flask-SQLAlchemy的事件通知系统。
+# #这个配置键的默认值为None，如果没有特殊需要，可以把它设为False来关闭警告信息。
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI']=os.getenv("DATABASE_URL","sqlite:///"+os.path.join(app.root_path,"data.db"))
+app.secret_key="chyuhung"
+
+db=SQLAlchemy(app)
+
+# #使用app.shell_context_processor装饰器注册一个shell上下文处理函数
+@app.shell_context_processor
+def make_shell_context():
+    return dict(db=db,
+                Student=Student,Teacher=Teacher
+           )
+
+# #初始化数据库
+# #实现一个自定义flask命令完成数据库初始化
+@app.cli.command()
+def initdb():
+    db.create_all()
+    click.echo("Initialized Database.")
+
+association_table=db.Table("association",db.Column("student_id",db.Integer,db.ForeignKey("student.id")),db.Column("teacher_id",db.Integer,db.ForeignKey("teacher.id")))
+
+class Student(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    name=db.Column(db.String(70),unique=True)
+    grade=db.Column(db.String(20))
+    teachers=db.relationship("Teacher",secondary=association_table,back_populates="students")
+
+class Teacher(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    name=db.Column(db.String(70),unique=True)
+    office=db.Column(db.String(20))
+```
+
+关联表使用db.Table 类定义，传人的第一个参数是关联表的名称。在关联表中定义了两个外键字段： teacher_id 字段存储Teacher 类的主键， student_id 存储Student类的主键。借助关联表这个中间人存储的外键对，可以把多对多关系分化成两个一对多关系。
+
+![image-20210611150534492](flask入门.assets/image-20210611150534492.png)
+
+![image-20210611150619507](flask入门.assets/image-20210611150619507.png)
+
+当需要查询某个学生记录的多个老师时，先通过学生和关联表的一对多关系查找所有包含该学生的关联表记录，然后就可以从这些记录中再进一步获取每个关联表记录包含的老师记录。假设学生记录的id 为1 ，那么通过查找关联表中student_id 字段为1 的记录，就可以获取到对应的teacher_id 值（分别为3 和4 ），通过外键值就可以在teacher 表里获取id 为3 和4 的记录，最终，就获取到id 为1 的学生记录相关联的所有老师记录。
+在Student 类中定义一个teachers 关系属性用来获取老师集合。在多对多关系中定义关系函数，除了第一个参数是关系另一侧的模型名称外，还需要添加一个secondary 参数，把这个值设为关联表的名称。
+为了便于实现真正的多对多关系，需要建立双向关系。建立双向关系后，多对多关系会变得更加直观。在Student 类上的teachers 集合属性会返回所有关联的老师记录，而在Teacher 类上的students 集合属性会返回所有相关的学生记录：
+
+```
+class Student(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    name=db.Column(db.String(70),unique=True)
+    grade=db.Column(db.String(20))
+    teachers=db.relationship("Teacher",secondary=association_table,back_populates="students")
+
+class Teacher(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    name=db.Column(db.String(70),unique=True)
+    office=db.Column(db.String(20))
+    students=db.relationship("Student",secondary=association_table,back_populates="teachers")
+```
+
+除了在声明关系时有所不同，多对多关系模式在操作关系时和其他关系模式基本相同。调用关系属性student.teachers 时， SQLAlchemy 会直接返回关系另一侧的Teacher 对象，而不是关联表记录，反之亦同。和其他关系模式中的集合关系属性一样，可以将关系属性teachers 和students 像列表一样操作。比如，当需要为某一个学生添加老师时，对关系属性使用append()方法即可。如果想要解除关系，那么可以使用remove()方法。
+
+关联表由SQLAlchemy接管，它会管理这个表:只需要像往常一样通过操作关系属性来建立或解除关系，SQLAlchemy会自动在关联表中创建或删除对应的关联表记录，而不用手动操作关联表。
+
+同样的，在多对多关系中也只需要在关系的一侧操作关系。当为学生A的teachers添加了老师B后，调用老师B的students属性时返回的学生记录也会包含学生A，反之亦同。
+
+## 更新数据库表
+
+模型类(表)不是一成不变的，当添加了新的模型类，或是在模型类中添加了新的字段，甚至是修改了字段的名称或类型，都需要更新表。在前面把数据库表类比成盛放货物的货架，这些货架是固定生成的。当在操控程序(DBMS/ORM)上变更了货架的结构时，仓库的货架也要根据变化相应进行调整。而且，当货架的结构产生变动时，还需要考虑如何处理货架上的货物（数据)。
+当在数据库的模型中添加了一个新的字段后，比如在Note模型里添加了一个存储笔记创建时间的timestamp字段。这时可能想要立刻启动程序看看效果，遗憾的是，看到了下面的报错信息:
+OperationalError: (sqlite3.0perationalError) no such column: note.timestamp [...J这段错误消息指出note表中没有timestamp列，并在中括号里给出了查询所对应的SQL原语。之所以会出现这个错误，是因为数据库表并不会随着模型的修改而自动更新。想想之前关于仓库的比喻，仓库里来了一批新类型的货物，可还没为它们安排相应的货架，这当然要出错了。
+
+### 重新生成表
+
+重新调用create_all()方法并不会起到更新表或重新创建表的作用。如果并不在意表中的数据，最简单的方法是使用drop_all()方法删除表以及其中的数据，然后再使用create_all()万法重新创建:
+
+```
+(helloflask) D:\helloflask\demos\newdatabase>flask shell
+Python 3.8.5 (tags/v3.8.5:580fbb0, Jul 20 2020, 15:43:08) [MSC v.1926 32 bit (Intel)] on win32
+App: app [production]
+Instance: D:\helloflask\demos\newdatabase\instance
+>>> db.drop_all()
+>>> db.create_all()
+```
+
+**这会清除数据库里的原有数据，请勿在生产环境下使用。**
+
+为了方便开发，修改initdb命令函数的内容，为其增加一个--drop选项来支持删除表和数据库后进行重建：
+
+```
+# #实现一个自定义flask命令完成数据库初始化
+@app.cli.command()
+@click.option("--drop",is_flag=True,help="Create after drop.")
+def initdb(drop):
+    """Initialize the database."""
+    if drop:
+        click.confirm("This operation will delete the database,do you want to continue?",abort=True)
+        db.drop_all()
+        click.echo("Drop tables.")
+    db.create_all()
+    click.echo("Initialized Database.")
+```
+
+在这个命令函数前，使用click 提供的 option装饰器为命令添加了一个--drop选项，将is_flag参数设为True可以将这个选项声明为布尔值标志 （boolean flag )。--drop选项的值作为drop参数传入命令函数，如果提供了这个选项，那么drop的值将是True，否则为False。因为添加--drop选项会直接清空数据库内容，如果需要，也可以通过click.confirm()函数添加一个确认提示，这样只有输入y或yes才会继续执行操作。
+现在，执行下面的命令会重建数据库和表:
+
+```
+(helloflask) D:\helloflask\demos\newdatabase>flask initdb --drop
+This operation will delete the database,do you want to continue? [y/N]: y
+Drop tables.
+Initialized Database.
+```
+
+### 使用Flask-Mi g rate 迁移数据库
+
+在开发时，以删除表再重建的方式更新数据库简单直接，但明显的缺陷是会丢掉数据库中的所有数据。在生产环境下，绝对不会想让数据库里的数据都被删除掉，这时需要使用数据库迁移工具来完成这个工作。SQLAlchemy的开发者Michael Bayer写了一个数据库迁移工具——Alembic来帮助实现数据库的迁移，数据库迁移工具可以在不破坏数据的情况下更新数据库表的结构。蒸馏器(Allembic)是炼金术士最重要的工具，要学习SQL炼金术(SQLAlchemy)，当然要掌握蒸馏器的使用。扩展Flask-Migrate集成了Alembic，提供了一些flask命令来简化迁移工作，将使用它来迁移数据库。Flask-Migrate及其依赖（主要是Alembic)可以使用Pipenv安装:
+
+```
+(helloflask) D:\helloflask\demos\newdatabase>pipenv install flask-migrate
+Courtesy Notice: Pipenv found itself running within a virtual environment, so it will automatically use that environment, instead of creating its own for any project. You c
+an set PIPENV_IGNORE_VIRTUALENVS=1 to force pipenv to ignore that environment and create its own instead. You can set PIPENV_VERBOSITY=-1 to suppress this warning.
+Installing flask-migrate...
+Adding flask-migrate to Pipfile's [packages]...
+Installation Succeeded
+Installing dependencies from Pipfile.lock (733065)...
+  ================================ 1/1 - 00:00:00
+```
+
+在程序中，实例化Flask-Migrate提供的 Migrate类，进行初始化操作:
+
+```
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+import os
+import click
+
+app=Flask(__name__)
+
+# #Flask-SQLAlchemy建议设置SQLALCHEMY_TRACK_MODIFICATIONS配置变量，
+# #这个配置变量决定是否追踪对象的修改，这用于Flask-SQLAlchemy的事件通知系统。
+# #这个配置键的默认值为None，如果没有特殊需要，可以把它设为False来关闭警告信息。
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI']=os.getenv("DATABASE_URL","sqlite:///"+os.path.join(app.root_path,"data.db"))
+app.secret_key="chyuhung"
+
+db=SQLAlchemy(app)
+migrate=Migrate(app,db) #在db对象创建后调用
+```
+
+实例化Migrate类时，除了传入程序实例app，还需要传入实例化Flask-SQLAlchemy提供的SQLAlchemy 类创建的db对象作为第二个参数。
+
+### 创建迁移环境
+
+在开始迁移数据之前,需要先使用下面的命令创建一个迁移环境:
+
+```
+(helloflask) D:\helloflask\demos\newdatabase>flask db init
+Creating directory D:\helloflask\demos\newdatabase\migrations ...  done
+Creating directory D:\helloflask\demos\newdatabase\migrations\versions ...  done
+Generating D:\helloflask\demos\newdatabase\migrations\alembic.ini ...  done
+Generating D:\helloflask\demos\newdatabase\migrations\env.py ...  done
+Generating D:\helloflask\demos\newdatabase\migrations\README ...  done
+Generating D:\helloflask\demos\newdatabase\migrations\script.py.mako ...  done
+Please edit configuration/connection/logging settings in 'D:\\helloflask\\demos\\newdatabase\\migrations\\alembic.ini' before proceeding.
+```
+
+Flask-Migrate提供了一个命令集，使用db作为命名集名称，它提供的命令都以flask db开头。可以在命令行中输入flask --help查看所有可用的命令和说明。
+
+**迁移环境只需要创建一次。这会在项目根目录下创建一个migrations文件夹，其中包含了自动生成的配置文件和迁移版本文件夹。**
+
+### 生成迁移脚本
+
+使用migrate 子命令可以自动生成迁移脚本：
+
+```
+(helloflask) D:\helloflask\demos\newdatabase>flask db migrate -m "add note timestamp"
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.autogenerate.compare] Detected added column 'teacher.timestamp'
+Generating D:\helloflask\demos\newdatabase\migrations\versions\19a5d4d09757_add_note_timestamp.py ...  done
+```
+
+这条命令可以简单理解为在flask里对数据库（db）进行迁移( migrate)。-m选项用来添加迁移备注信息。从上面的输出信息可以看到，Alembic检测出了模型的变化:表note新添加了一个timestamp列，并且相应生成了一个迁移脚本19a5d4d09757_add_note_timestamp.py,脚本的内容如代码清单5-17所示:
+
+```
+"""add note timestamp
+
+Revision ID: 19a5d4d09757
+Revises: 
+Create Date: 2021-06-24 09:30:54.370612
+
+"""
+from alembic import op
+import sqlalchemy as sa
+
+
+# revision identifiers, used by Alembic.
+revision = '19a5d4d09757'
+down_revision = None
+branch_labels = None
+depends_on = None
+
+
+def upgrade():
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.add_column('teacher', sa.Column('timestamp', sa.TIMESTAMP(), nullable=True))
+    # ### end Alembic commands ###
+
+
+def downgrade():
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_column('teacher', 'timestamp')
+    # ### end Alembic commands ###
+```
+
+从上面的代码可以看出，迁移脚本主要包含了两个函数： upgrade()函数用来将改动应用到数据库，函数中包含了向表中添加timestamp 字段的命令；而downgrade()函数用来撤销改动，包含了删除timestamp 字段的命令。
+
+**就像这两个函数中的注释所说的，迁移命令是由A l embic 自动生成的，其中可能包含错误，所以有必要在生成后检查一下。**
+
+因为每一次迁移都会生成新的迁移脚本，而且 Alembic为每一次迁移都生成了修订版本( revision)ID，所以数据库可以恢复到修改历史中的任一点。正因为如此，迁移环境中的文件也要纳入版本控制。
+有些复杂的操作无法实现自动迁移，这时可以使用revision命令手动创建迁移脚本。这同样会生成一个迁移脚本，不过脚本中的upgrade()和 downgrade()函数都是空的。需要使用Alembic提供的Operations对象指令在这两个函数中实现具体操作，具体可以访问Alembic官方文档查看。
+
+### 更新数据库
+
+更新之前：
+
+![image-20210624095346545](flask入门.assets/image-20210624095346545.png)
+
+生成了迁移脚本后，使用upgrade子命令即可更新数据库：
+
+```
+(helloflask) D:\helloflask\demos\newdatabase>flask db upgrade
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 19a5d4d09757, add note timestamp
+```
+
+如果还没有创建数据库和表，这个命令会自动创建；如果已经创建， 则会在不损坏数据的前提下执行更新。
+
+如果想回滚迁移，那么可以使用downgrade命令（降级)，它会撤销最后一次迁移在数据库中的改动，这在开发时非常有用。比如，当执行upgrade命令后发现某些地方出错了，这时就可以执行flask db downgrade命令进行回滚，删除对应的迁移脚本，重新生成迁移脚本后再进行更新( upgrade)。
+虽然更新了数据库，但是之前创建的记录中并没有timestamp字段，所以这些记录的timestamp字段的值将为空。如果需要为旧的数据添加默认的timestamp字段值可以手动操作。
+
+更新之后：
+
+![image-20210624095702183](flask入门.assets/image-20210624095702183.png)
+
+### 数据库进阶实验
+
+#### 级联操作
+
+Cascade意为“级联操作”，就是在操作一个对象的同时，对相关的对象也执行某些操作。通过一个Post模型和Comment模型来演示级联操作，分别表示文章(帖子）和评论，两者为一对多关系:
+
+```
+class Post(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    title=db.Column(db.String(125))
+    body=db.Column(db.Text)
+    comments=db.relationship("Comment",back_populates='post')
+
+class Comment(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    body=db.Column(db.Text)
+    post_id=db.Column(db.Integer,db.ForeignKey("post.id"))
+    post=db.relationship("Post",back_populates="comments")
+```
+
+级联行为通过关系函数relationship()的cascade参数设置。希望在操作Post对象时，处于附属地位的Comment对象也被相应执行某些操作，这时应该在Post类的关系函数中定义级联参数。设置了cascade参数的一侧将被视为父对象，相关的对象则被视为子对象。
+cascade通常使用多个组合值，级联值之间使用逗号分隔，比如:
+
+```
+class Post(db.Model):
+...
+    comments=db.relationship("Comment",cascade="save-update,merge,delete")
+```
+
+常用的配置组合如下所示:
+save-update、merge（默认值)
+save-update、nerge、deleteall
+all、delete-orphan
+当没有设置cascade参数时，会使用默认值save-update、merge。上面的all等同于除了delete-orphan 以外所有可用值的组合，即 save-update、merge、refresh-expire、expunge、delete。
+
+#### 1.save-update
+
+save-update是默认的级联行为，当cascade参数设为save-update时，如果使用db.session.add()方法将Post对象添加到数据库会话时，那么与Post相关联的Comment对象也将被添加到数据库会话。首先创建一个Post对象和两个Comment对象:
+
+```
+(helloflask) D:\helloflask\demos\newdatabase>flask initdb
+Initialized Database.
+
+(helloflask) D:\helloflask\demos\newdatabase>flask shell
+Python 3.8.5 (tags/v3.8.5:580fbb0, Jul 20 2020, 15:43:08) [MSC v.1926 32 bit (Intel)] on win32
+App: app [production]
+Instance: D:\helloflask\demos\newdatabase\instance
+>>> post1=Post()
+>>> comment1=Comment()
+>>> comment2=Comment()
+#将post1添加到数据库会话后，只有post1在数据库会话中：
+>>> db.session.add(post1)
+>>> post1 in db.session
+True
+>>> comment1 in db.session
+False
+>>> comment2 in db.session
+False
+```
+
+如果让post1与这两个Comment对象建立关系，那么这两个 Comment对象也会自动被添加到数据库余话中:
+
+```
+>>> post1.comments.append(comment1)
+>>> post1.comments.append(comment2)
+>>> comment1 in  db.session
+True
+>>> comment2 in db.session
+True
+```
+
+当调用db.session.commit()提交数据库会话时，这三个对象都会被提交到数据库中。
+
+#### 2、delete
+
+如果某个Post对象被删除，那么按照默认的行为，该Post对象相关联的所有Comment对象都将与这个Post对象取消关联，外键字段的值会被清空。如果Post类的关系函数中cascade参数设为delete时，这些相关的Comment 会在关联的Post对象删除时被一并删除。当需要设置delete级联时，我们会将级联值设为all或save-update、merge、delete，比如:
+
+```
+class Post(db.Model):
+...
+    comments=db.relationship("Comment",cascade="all")
+```
+
+先创建一个文章对象post2和两个评论对象comment3和 comment4，并将这两个评论对象与文章对象建立关系，将它们添加到数据库会话并提交:
+
+```
+>>> post2=Post()
+>>> comment3=Comment()
+>>> comment4=Comment()
+>>> post2.comments.append(comment3)
+>>> post2.comments.append(comment4)
+>>> db.session.add(post2)
+>>> db.session.commit()
+```
+现在共有两条Post 记录和四条Comment 记录：
+
+```
+>>> Post.query.all()
+[<Post 1>, <Post 2>]
+>>> Comment.query.all()
+[<Comment 1>, <Comment 2>, <Comment 3>, <Comment 4>]
+```
+
+如果删除文章对象post2 ， 那么对应的两个评论对象也会一并被删除：
+
+```
+>>> post2=Post.query.get(2)
+>>> db.session.delete(post2)
+>>> db.session.commit()
+>>> Post.query.all()
+[<Post 1>]
+>>> Comment.query.all()
+[<Comment 1>, <Comment 2>]
+```
+
+#### 3、delete-orphan
+
+这个模式是基于delete级联的，必须和 delete级联一起使用，通常会设为all、delete-orphan，因为 all 包含delete。因此当cascade参数设为delete-orphan时，它首先包含delete级联的行为:当某个Post对象被删除时，所有相关的Comment对象都将被删除（ delete级联)。除此之外，当某个Post对象(父对象）与某个 Comment对象(子对象）解除关系时，也会删除该Comment对象，这个解除关系的对象被称为孤立对象（orphan object)。现在 comments属性中的级联值为all、 delete-orphan，如下所示:
+
+```
+class Post(db.Model):
+...
+    comments=db.relationship("Comment",cascade="all,delete-orphan")
+```
+
+先创建一个文章对象post3和两个评论对象comment5和comment6，并将这两个评论对象与文章对象建立关系，将它们添加到数据库会话并提交:
+
+```
+>>> post3=Post()
+>>> comment5=Comment()
+>>> comment6=Comment()
+>>> post3.comments.append(comment5)
+>>> post3.comments.append(comment6)
+>>> db.session.add(post3)
+>>> db.session.commit()
+```
+
+下面将comment5和 comment6与post3解除关系并提交数据库会话:
+
+```
+>>> Post.query.all()
+[<Post 1>]
+>>> Comment.query.all()
+[<Comment 1>, <Comment 2>]
+>>> post3.comments.remove(comment5)
+>>> post3.comments.remove(comment6)
+>>> db.session.commit()
+>>> Comment.query.all()
+[]
+```
+
+默认情况下，相关评论对象的外键会被设为空值。因为设置了delete-orphan级联,所以现在会发现解除关系的两条评论记录都被删除了。
+
+delete和 delete-orphan通常会在一对多关系模式中，而且“多”这一侧的对象附属于“一”这一侧的对象时使用。尤其是如果“一”这一侧的“父”对象不存在了，那么“多”这一侧的“子”对象不再有意义的情况。比如，文章和评论的关系就是一个典型的示例。当文章被删除了，那么评论也就没必要再留存。在这种情况下，如果不使用级联操作，那么我们就需要手动迭代关系另一侧的所有评论对象，然后一一进行删除操作。
+
+### 事件监听
+
+在Flask中，可以使用Flask 提供的多个装饰器注册请求回调函数，它们会在特定的请求处理环节被执行。类似的，SQLAlchemy也提供了一个listen_for()装饰器，它可以用来注册事件回调函数。
+listen_for()装饰器主要接收两个参数，target表示监听的对象，这个对象可以是模型类、类实例或类属性等。identifier参数表示被监听事件的标识符，比如，用于监听属性的事件标识符有set、append、remove、init_scalar、init_collection等。
+为了演示事件监听，我们创建了一个Draft模型类表示草稿，其中包含body字段和edit_time字段，分别存储草稿正文和被修改的次数，其中 edit_time字段的默认值为0，如下所示:
+
+```
+class Draft(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    body=db.Column(db.Text)
+    edit_time=db.Column(db.Integer,default=0)
+```
+
+通过注册事件监听函数，我们可以实现在body列修改时，自动叠加表示被修改次数的edit_time字段。在SQLAlchemy中，每个事件都会有一个对应的事件方法，不同的事件方法支持不同的参数。被注册的监听函数需要接收对应事件方法的所有参数，所以具体的监听函数用法因使用的事件而异。设置某个字段值将触发set事件，以下为set事件编写的事件监听函数：
+
+```
+@db.event.listens_for(Draft.body,"set")
+def increment_edit_time(target,value,oldvalue,initiator):
+    if target.edit_time is  not None:
+        target.edit_time+=1
+```
+
+在listens_for()装饰器中分别传入Draft.body 和 set作为 targe和 identifier 参数的值。监听函数接收所有set()事件方法接收的参数，其中的target参数表示触发事件的模型类实例，使用target.edit_time即可获取我们需要叠加的字段。其他的参数也需要照常写出，虽然这里没有用到。value表示被设置的值，oldvalue表示被取代的旧值。
+当set事件发生在目标对象Draft.body上时，这个监听函数就会被执行,从而自动叠加Draft.edit_time列的值，如下所示:
+
+```
+(helloflask) D:\helloflask\demos\newdatabase>flask initdb --drop
+This operation will delete the database,do you want to continue? [y/N]: y
+Drop tables.
+Initialized Database.
+
+(helloflask) D:\helloflask\demos\newdatabase>flask shell
+Python 3.8.5 (tags/v3.8.5:580fbb0, Jul 20 2020, 15:43:08) [MSC v.1926 32 bit (Intel)] on win32
+App: app [production]
+Instance: D:\helloflask\demos\newdatabase\instance
+>>> draft=Draft(body="init")
+>>> db.session.add(draft)
+>>> db.session.commit()
+>>> draft.edit_time
+0
+>>> draft.body="edited"
+>>> draft.edit_time
+1
+>>> draft.body="edited again"
+>>> draft.edit_time
+2
+```
+
+除了这种传统的参数接收方式，即接收所有事件方法接收的参数，还有一种更简单的方法。通过在listens_for()装饰器中将关键字参数name 设为True，可以在监听函数中接收\*\*kwargs 作为参数(可变长关键字参数)，即“named argument”。然后在函数中可以使用参数名作为键来从\*\*kwargs字典获取对应的参数值:
+
+```
+@db.event.listens_for(Draft.body,"set",named=True)
+def increment_edit_time(**kwargs):
+    if kwargs["target"].edit_time is not None:
+        kwargs["target"].edit_time +=1
+```
+
+```
+>>> draft=Draft(body="init")
+>>> db.session.add(draft)
+>>> db.session.commit()
+>>> draft.edit_time
+0
+>>> draft.body="test01"
+>>> draft.edit_time
+1
+>>> draft.body="test02"
+>>> draft.edit_time
+2
+```
+
+SQLAlchemy作为SQL工具集本身包含两大主要组件:SQLAlchemy ORM和 SQLAlchemyCore。前者实现了ORM功能，后者实现了数据库接口等核心功能，这两类组件都提供了大量的监听事件，几乎覆盖整个SQLAlchemy使用的生命周期。访问下面的链接查看可用的事件列表以及具体的事件方法使用介绍:
+
+SQLAlchemy Core 事件： http: // docs . sqlalchemy. org/en/latest/core/events.html 。
+SQLAlchemy ORM 事件： http: // docs . sqlalchemy.org/en/latest/orm/events.html。
