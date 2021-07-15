@@ -1344,10 +1344,62 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#_81" class="md-nav__link">
+    电子邮件
+  </a>
+  
+    <nav class="md-nav" aria-label="电子邮件">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flask-mail" class="md-nav__link">
+    使用flask-mail发送电子邮件
+  </a>
+  
+    <nav class="md-nav" aria-label="使用flask-mail发送电子邮件">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flask-mail_1" class="md-nav__link">
+    配置flask-mail
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_82" class="md-nav__link">
+    发送邮件
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
     
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../flask%E5%AE%9E%E6%88%98%E8%BF%9B%E9%98%B6/" title="flask实战进阶" class="md-nav__link">
+      flask实战进阶
+    </a>
   </li>
 
         
@@ -1397,6 +1449,18 @@
   <li class="md-nav__item">
     <a href="../../%E7%B3%BB%E7%BB%9F/%E5%85%B3%E4%BA%8ELinux%E7%9A%84skel%E7%9B%AE%E5%BD%95/" title="关于Linux的/etc/skel目录" class="md-nav__link">
       关于Linux的/etc/skel目录
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../%E7%B3%BB%E7%BB%9F/%E5%8D%B8%E8%BD%BD%E5%88%86%E5%8C%BA%E7%9B%AE%E5%BD%95%E5%87%BA%E7%8E%B0target%20is%20busy%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" title="卸载分区目录出现target is busy解决方法" class="md-nav__link">
+      卸载分区目录出现target is busy解决方法
     </a>
   </li>
 
@@ -2629,6 +2693,46 @@
   <a href="#_80" class="md-nav__link">
     事件监听
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_81" class="md-nav__link">
+    电子邮件
+  </a>
+  
+    <nav class="md-nav" aria-label="电子邮件">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flask-mail" class="md-nav__link">
+    使用flask-mail发送电子邮件
+  </a>
+  
+    <nav class="md-nav" aria-label="使用flask-mail发送电子邮件">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flask-mail_1" class="md-nav__link">
+    配置flask-mail
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_82" class="md-nav__link">
+    发送邮件
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -5978,6 +6082,114 @@ def increment_edit_time(**kwargs):
 <p>SQLAlchemy作为SQL工具集本身包含两大主要组件:SQLAlchemy ORM和 SQLAlchemyCore。前者实现了ORM功能，后者实现了数据库接口等核心功能，这两类组件都提供了大量的监听事件，几乎覆盖整个SQLAlchemy使用的生命周期。访问下面的链接查看可用的事件列表以及具体的事件方法使用介绍:</p>
 <p>SQLAlchemy Core 事件： http: // docs . sqlalchemy. org/en/latest/core/events.html 。
 SQLAlchemy ORM 事件： http: // docs . sqlalchemy.org/en/latest/orm/events.html。</p>
+<h2 id="_81">电子邮件<a class="headerlink" href="#_81" title="Permanent link">&para;</a></h2>
+<h3 id="flask-mail">使用flask-mail发送电子邮件<a class="headerlink" href="#flask-mail" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>pipenv install flask-mail
+</code></pre></div>
+
+<h4 id="flask-mail_1">配置flask-mail<a class="headerlink" href="#flask-mail_1" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code># -*- coding: utf-8 -*-
+
+from flask_mail import Mail,Message
+from flask import Flask
+
+
+app=Flask(__name__)
+
+#随着配置逐渐增多，改用app.config 对象的update（）方法来加载配置
+#在实例化Mail 类时，flask-mail会获取配置以创建一个用于发信的对象，所以确保在实例化Mail 类之前加载配置
+app.config.update(
+    MAIL_SERVER=&#39;smtp.163.com&#39;,
+    MAIL_PORT=25,
+    MAIL_USERNAME=&#39;your email name@163.com&#39;,
+    MAIL_PASSWORD=&#39;Your password or password code&#39;,
+    MAIL_DEFAULT_SENDER=&#39;your email name@163.com&gt;&#39;
+)
+mail = Mail(app)
+</code></pre></div>
+
+<h4 id="_82">发送邮件<a class="headerlink" href="#_82" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>(helloflask) D:\helloflask\demos\my_email&gt;flask shell
+Python 3.8.5 (tags/v3.8.5:580fbb0, Jul 20 2020, 15:43:08) [MSC v.1926 32 bit (Intel)] on win32
+App: app [production]
+Instance: D:\helloflask\demos\my_email\instance
+&gt;&gt;&gt; from flask_mail import Message
+&gt;&gt;&gt; from app import mail
+&gt;&gt;&gt; app.config[&#39;MAIL_PORT&#39;]
+25
+&gt;&gt;&gt; app.config[&#39;MAIL_PASSWORD&#39;]
+&#39;Your password or password code&#39;
+&gt;&gt;&gt; message = Message(subject = &#39;test&#39;, recipients=[&#39;email_example@qq.com&#39;], body=&#39;test&#39;)
+&gt;&gt;&gt; mail.send(message)
+</code></pre></div>
+
+<p>收到测试邮件</p>
+<p><img alt="image-20210702154406136" src="../flask%E5%85%A5%E9%97%A8.assets/image-20210702154406136.png" /></p>
+<p>代码包装成通用发信函数：</p>
+<div class="highlight"><pre><span></span><code># -*- coding: utf-8 -*-
+
+from flask_mail import Mail,Message
+from flask import Flask
+import os
+
+app=Flask(__name__)
+app.secret_key = os.getenv(&#39;SECRET_KEY&#39;, &#39;123456789&#39;)
+#随着配置逐渐增多，改用app.config 对象的update（）方法来加载配置
+#在实例化Mail 类时，flask-mail会获取配置以创建一个用于发信的对象，所以确保在实例化Mail 类之前加载配置
+app.config.update(
+    MAIL_SERVER=&#39;smtp.163.com&#39;,
+    MAIL_PORT=25,
+    MAIL_USERNAME=&#39;your email@163.com&#39;,
+    MAIL_PASSWORD=&#39;your passwd&#39;,
+    MAIL_DEFAULT_SENDER=&#39;your email@163.com&gt;&#39;
+)
+
+mail = Mail(app)
+
+
+def send_mail(to,subject,body):
+    message=Message(subject=subject,recipients=[to],body=body)
+    mail.send(message)
+
+from forms import Sendmail
+from flask import render_template,redirect,url_for
+@app.route(&#39;/index&#39;,methods=[&#39;post&#39;,&#39;get&#39;])
+def index():
+    form=Sendmail()
+    if form.validate_on_submit():
+        to=form.to.data
+        subject=form.subject.data
+        body=form.body.data
+        send_mail(to,subject,body)
+        return redirect(url_for(&#39;index&#39;))
+    return render_template(&#39;index.html&#39;,form=form)
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code>&lt;form method=&quot;post&quot;&gt;
+    {{ form.csrf_token }}
+    {{ form.to.label }}&lt;br&gt;
+    {{ form.to }}&lt;br&gt;
+    {{ form.subject.label }}&lt;br&gt;
+    {{ form.subject }}&lt;br&gt;
+    {{ form.body.label }}&lt;br&gt;
+    {{ form.body }}&lt;br&gt;
+    {{ form.submit }}&lt;br&gt;
+&lt;/form&gt;
+</code></pre></div>
+
+<div class="highlight"><pre><span></span><code>from flask_wtf import FlaskForm
+from wtforms import SubmitField,TextField
+from wtforms.validators import DataRequired,Email
+
+class Sendmail(FlaskForm):
+    subject=TextField(&#39;subject&#39;,validators=[DataRequired()])
+    to=TextField(&#39;to&#39;,validators=[DataRequired(),Email()])
+    body=TextField(&#39;body&#39;,validators=[DataRequired()])
+    submit=SubmitField(&#39;Send&#39;)
+</code></pre></div>
+
+<p>运行效果：</p>
+<p><img alt="image-20210702165023253" src="../flask%E5%85%A5%E9%97%A8.assets/image-20210702165023253.png" /></p>
                 
               
               
@@ -6011,13 +6223,13 @@ SQLAlchemy ORM 事件： http: // docs . sqlalchemy.org/en/latest/orm/events.htm
           </a>
         
         
-          <a href="../../%E7%B3%BB%E7%BB%9F/windows2016%E7%94%B5%E8%AF%9D%E6%BF%80%E6%B4%BB/" title="WindowsServer电话激活操作步骤" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../flask%E5%AE%9E%E6%88%98%E8%BF%9B%E9%98%B6/" title="flask实战进阶" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   下一页
                 </span>
-                WindowsServer电话激活操作步骤
+                flask实战进阶
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">
