@@ -4370,3 +4370,128 @@ SQLAlchemy作为SQL工具集本身包含两大主要组件:SQLAlchemy ORM和 SQL
 
 SQLAlchemy Core 事件： http: // docs . sqlalchemy. org/en/latest/core/events.html 。
 SQLAlchemy ORM 事件： http: // docs . sqlalchemy.org/en/latest/orm/events.html。
+
+## 电子邮件
+
+### 使用flask-mail发送电子邮件
+
+```
+pipenv install flask-mail
+```
+
+#### 配置flask-mail
+
+```
+# -*- coding: utf-8 -*-
+
+from flask_mail import Mail,Message
+from flask import Flask
+
+
+app=Flask(__name__)
+
+#随着配置逐渐增多，改用app.config 对象的update（）方法来加载配置
+#在实例化Mail 类时，flask-mail会获取配置以创建一个用于发信的对象，所以确保在实例化Mail 类之前加载配置
+app.config.update(
+    MAIL_SERVER='smtp.163.com',
+    MAIL_PORT=25,
+    MAIL_USERNAME='your email name@163.com',
+    MAIL_PASSWORD='Your password or password code',
+    MAIL_DEFAULT_SENDER='your email name@163.com>'
+)
+mail = Mail(app)
+```
+
+#### 发送邮件
+
+
+```
+(helloflask) D:\helloflask\demos\my_email>flask shell
+Python 3.8.5 (tags/v3.8.5:580fbb0, Jul 20 2020, 15:43:08) [MSC v.1926 32 bit (Intel)] on win32
+App: app [production]
+Instance: D:\helloflask\demos\my_email\instance
+>>> from flask_mail import Message
+>>> from app import mail
+>>> app.config['MAIL_PORT']
+25
+>>> app.config['MAIL_PASSWORD']
+'Your password or password code'
+>>> message = Message(subject = 'test', recipients=['email_example@qq.com'], body='test')
+>>> mail.send(message)
+```
+
+收到测试邮件
+
+![image-20210702154406136](flask入门.assets/image-20210702154406136.png)
+
+代码包装成通用发信函数：
+
+```
+# -*- coding: utf-8 -*-
+
+from flask_mail import Mail,Message
+from flask import Flask
+import os
+
+app=Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY', '123456789')
+#随着配置逐渐增多，改用app.config 对象的update（）方法来加载配置
+#在实例化Mail 类时，flask-mail会获取配置以创建一个用于发信的对象，所以确保在实例化Mail 类之前加载配置
+app.config.update(
+    MAIL_SERVER='smtp.163.com',
+    MAIL_PORT=25,
+    MAIL_USERNAME='your email@163.com',
+    MAIL_PASSWORD='your passwd',
+    MAIL_DEFAULT_SENDER='your email@163.com>'
+)
+
+mail = Mail(app)
+
+
+def send_mail(to,subject,body):
+    message=Message(subject=subject,recipients=[to],body=body)
+    mail.send(message)
+
+from forms import Sendmail
+from flask import render_template,redirect,url_for
+@app.route('/index',methods=['post','get'])
+def index():
+    form=Sendmail()
+    if form.validate_on_submit():
+        to=form.to.data
+        subject=form.subject.data
+        body=form.body.data
+        send_mail(to,subject,body)
+        return redirect(url_for('index'))
+    return render_template('index.html',form=form)
+```
+
+```
+<form method="post">
+    {{ form.csrf_token }}
+    {{ form.to.label }}<br>
+    {{ form.to }}<br>
+    {{ form.subject.label }}<br>
+    {{ form.subject }}<br>
+    {{ form.body.label }}<br>
+    {{ form.body }}<br>
+    {{ form.submit }}<br>
+</form>
+```
+
+```
+from flask_wtf import FlaskForm
+from wtforms import SubmitField,TextField
+from wtforms.validators import DataRequired,Email
+
+class Sendmail(FlaskForm):
+    subject=TextField('subject',validators=[DataRequired()])
+    to=TextField('to',validators=[DataRequired(),Email()])
+    body=TextField('body',validators=[DataRequired()])
+    submit=SubmitField('Send')
+```
+
+运行效果：
+
+![image-20210702165023253](flask入门.assets/image-20210702165023253.png)
+
