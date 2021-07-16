@@ -307,8 +307,22 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    创建程序实例
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web" class="md-nav__link">
+    web程序开发流程
+  </a>
   
 </li>
         
@@ -573,8 +587,22 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    创建程序实例
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web" class="md-nav__link">
+    web程序开发流程
+  </a>
   
 </li>
         
@@ -692,6 +720,36 @@ SQLALCHEMY_DATABASE_URI = os.getenv(&#39;DATABASE_URI&#39;, dev_db)
 app = Flask(_name_)
 app.config.from_pyfile( &#39;settings.py &#39;)
 </code></pre></div>
+
+<h4 id="_4">创建程序实例<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h4>
+<p>使用包组织程序代码后，创建程序实例、初始化扩展等操作可以在程序包的构造文件(<em>init_</em>.py）中实现:</p>
+<div class="highlight"><pre><span></span><code># -*- coding: utf-8 -*-
+
+from flask import Flask
+from flask_bootstrap import Bootstrap
+from flask_moment import Moment
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(&#39;sayhello&#39;)
+app.config.from_pyfile(&#39;settings.py&#39;)
+app.jinja_env.trim_blocks = True
+app.jinja_env.lstrip_blocks = True
+
+db = SQLAlchemy(app)
+bootstrap = Bootstrap(app)
+moment = Moment(app)
+
+from sayhello import views, errors, commands
+</code></pre></div>
+
+<p>当启动程序时，首先被执行的是包含程序实例的脚本，即构造文件。</p>
+<p>但注册在程序实例上的各种处理程序均存放在其他脚本中，比如视图函数存放在views.py 中、错误处理函数则存放在errors.py中。如果不被执行，那么这些视图函数和错误处理函数就不会注册到程序上，那么程序也无法正常运行。为了让使用程序实例app注册的视图函数，错误处埋函数，自定义命令函数等和程序实例关联起来，需要在构造文件中导入这些模块。因为这些模块也需要从构造文件中导入程序实例，所以为了避免循环依赖，这些导入语句在构造文件的末尾定义。</p>
+<p>从构造文件中导入变量时不需要注明构造文件的路径，只需要从包名称导入，比如导入在构造文件中定义的程序实例app可以使用from sayhello import app。</p>
+<p>Flask在通过FLASK_APP环境变量定义的模块中寻找程序实例。所以在启动程序前，我们需要给.flaskenv中的环境变量FLASK_APP重新赋值，这里仅写出包名称即可:</p>
+<div class="highlight"><pre><span></span><code>FLASK_APP=sayhello
+</code></pre></div>
+
+<h3 id="web">web程序开发流程<a class="headerlink" href="#web" title="Permanent link">&para;</a></h3>
                 
               
               
